@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template_string
+from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
 
@@ -37,26 +37,35 @@ def home():
 
 @app.route('/calc', methods=['GET'])
 def calculate():
-    try:
-        a = float(request.args.get('a'))
-        b = float(request.args.get('b'))
-        op = request.args.get('op')
+    result = None
+    error = None
 
-        if op == 'add':
-            result = a + b
-        elif op == 'sub':
-            result = a - b
-        elif op == 'mul':
-            result = a * b
-        elif op == 'div':
-            if b != 0:
-                result = a / b
+    a = request.args.get('a')
+    b = request.args.get('b')
+    op = request.args.get('op')
+
+    if a and b and op:
+        try:
+            a = float(a)
+            b = float(b)
+
+            if op == 'add':
+                result = a + b
+            elif op == 'sub':
+                result = a - b
+            elif op == 'mul':
+                result = a * b
+            elif op == 'div':
+                if b != 0:
+                    result = a / b
+                else:
+                    error = "Division by zero is not allowed"
             else:
-                return jsonify({"error": "Division by zero is not allowed"}), 400
-        else:
-            return jsonify({"error": "Invalid operation"}), 400
+                error = "Invalid operation"
 
-        return jsonify({"result": result})
+        except ValueError:
+            error = "Invalid input"
+    return render_template_string(html_form, result=result, error=error)
 
-    except (ValueError, TypeError):
-        return jsonify({"error": "Invalid input"}), 400
+if __name__ == '__main__':
+    app.run(debug=True)
