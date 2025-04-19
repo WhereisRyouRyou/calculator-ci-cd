@@ -33,7 +33,7 @@ html_form = """
 
 @app.route('/')
 def home():
-    return render_template_string(html_form, result=None, error=None)
+    return "Welcome to the Calculator API"
 
 @app.route('/calc', methods=['GET'])
 def calculate():
@@ -52,15 +52,11 @@ def calculate():
             if b != 0:
                 result = a / b
             else:
-                return render_template_string(html_form, result=None, error="Division by zero is not allowed")
+                return jsonify({"error": "Division by zero is not allowed"}), 400
         else:
-            return render_template_string(html_form, result=None, error="Invalid operation")
+            return jsonify({"error": "Invalid operation"}), 400
 
-        return render_template_string(html_form, result=result, error=None)
+        return jsonify({"result": result})
 
-    except ValueError:
-        return render_template_string(html_form, result=None, error="Invalid input")
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid input"}), 400
