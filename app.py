@@ -1,35 +1,6 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
-
-# HTML for the form
-html_form = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Calculator</title>
-</head>
-<body>
-    <h1>Simple Calculator</h1>
-    <form method="get" action="/calc">
-        <input type="number" step="any" name="a" placeholder="First number" required>
-        <select name="op">
-            <option value="add">+</option>
-            <option value="sub">−</option>
-            <option value="mul">×</option>
-            <option value="div">÷</option>
-        </select>
-        <input type="number" step="any" name="b" placeholder="Second number" required>
-        <button type="submit">Calculate</button>
-    </form>
-    {% if result is not none %}
-        <h2>Result: {{ result }}</h2>
-    {% elif error %}
-        <h2 style="color:red;">Error: {{ error }}</h2>
-    {% endif %}
-</body>
-</html>
-"""
 
 @app.route('/')
 def home():
@@ -62,10 +33,10 @@ def calculate():
                     error = "Division by zero is not allowed"
             else:
                 error = "Invalid operation"
-
         except ValueError:
             error = "Invalid input"
-    return render_template_string(html_form, result=result, error=error)
+
+    return render_template('calc.html', result=result, error=error)
 
 if __name__ == '__main__':
     app.run(debug=True)
