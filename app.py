@@ -10,33 +10,26 @@ def home():
 def calculate():
     result = None
     error = None
+    try:
+        a = float(request.args.get('a'))
+        b = float(request.args.get('b'))
+        op = request.args.get('op')
 
-    a = request.args.get('a')
-    b = request.args.get('b')
-    op = request.args.get('op')
-
-    if a and b and op:
-        try:
-            a = float(a)
-            b = float(b)
-
-            if op == 'add':
-                result = a + b
-            elif op == 'sub':
-                result = a - b
-            elif op == 'mul':
-                result = a * b
-            elif op == 'div':
-                if b != 0:
-                    result = a / b
-                else:
-                    error = "Division by zero is not allowed"
+        if op == 'add':
+            result = a + b
+        elif op == 'sub':
+            result = a - b
+        elif op == 'mul':
+            result = a * b
+        elif op == 'div':
+            if b != 0:
+                result = a / b
             else:
-                error = "Invalid operation"
-        except ValueError:
+                error = "Division by zero is not allowed"
+        else:
+            error = "Invalid operation"
+    except:
+        if request.args:
             error = "Invalid input"
 
     return render_template('calc.html', result=result, error=error)
-
-if __name__ == '__main__':
-    app.run(debug=True)
