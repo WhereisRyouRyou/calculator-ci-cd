@@ -19,8 +19,7 @@ def calculate():
             result = a + b
         elif op == 'sub':
             result = a - b
-        elif op == 'mul':
-            result = a * b
+      
         elif op == 'div':
             if b != 0:
                 result = a / b
