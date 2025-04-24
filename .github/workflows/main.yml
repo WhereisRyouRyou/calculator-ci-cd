@@ -22,7 +22,7 @@ jobs:
 
     - name: Run tests
       run: pip install pytest
-      pytest
+        pytest
 
     - name: Deploy to Heroku
       uses: akhileshns/heroku-deploy@v3.12.12
